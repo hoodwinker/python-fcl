@@ -745,12 +745,14 @@ cdef quaternion3d_to_numpy(defs.Quaterniond q):
     return numpy.array([q.w(), q.x(), q.y(), q.z()])
 
 cdef defs.Quaterniond numpy_to_quaternion3d(a):
+    a = a.astype('double')
     return defs.Quaterniond(<double?> a[0], <double?> a[1], <double?> a[2], <double?> a[3])
 
 cdef vec3d_to_numpy(defs.Vector3d vec):
     return numpy.array([vec[0], vec[1], vec[2]])
 
 cdef defs.Vector3d numpy_to_vec3d(np.ndarray[double, ndim=1] a):
+    a = a.astype('double')
     return defs.Vector3d(&a[0])
 
 cdef mat3d_to_numpy(defs.Matrix3d m):
@@ -761,7 +763,7 @@ cdef mat3d_to_numpy(defs.Matrix3d m):
 cdef defs.Matrix3d numpy_to_mat3d(np.ndarray[double, ndim=2] a):
     # NOTE Eigen defaults to column-major storage,
     # which corresponds to non-default Fortran mode of ordering in numpy
-    cdef np.ndarray[double, ndim=2, mode='fortran'] f = np.ndarray.copy(a, order='F')
+    cdef np.ndarray[double, ndim=2, mode='fortran'] f = np.ndarray.copy(a.astype('double'), order='F')
     return defs.Matrix3d(&f[0, 0])
 
 cdef c_to_python_collision_geometry(defs.const_CollisionGeometryd*geom, CollisionObject o1, CollisionObject o2):
